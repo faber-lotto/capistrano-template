@@ -37,12 +37,19 @@ In your Capfile:
  
    desc 'Upload a rendered erb-template'
    task :setup do     
-     on roles :all       
+     on roles :all
+       # searchs for template assets.host.site.erb in :templating_paths
+       # renders the template and upload it to "#{release_path}/assets.host.site" on all hosts
+       # when the new rendered content is changed or the remote file does not exists
        template 'assets.host.site'
      end
      
      on roles :all       
-       template 'other.template.name', 'execute_some_thing.sh', 0750
+       # searchs for template other.template.name.erb in :templating_paths
+       # renders the template and upload it to "~/execute_some_thing.sh" on all hosts
+       # when the new rendered content is changed or the remote file does not exists
+       # after this the mode is changed to 0750
+       template 'other.template.name', '~/execute_some_thing.sh', 0750
      end
           
    end
