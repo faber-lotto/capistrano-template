@@ -1,4 +1,6 @@
 [![Gem Version](https://badge.fury.io/rb/capistrano-template.svg)](http://badge.fury.io/rb/capistrano-template)
+[![Build Status](https://travis-ci.org/faber-lotto/capistrano-template.svg?branch=master)](https://travis-ci.org/faber-lotto/capistrano-template)
+[![Code Climate](https://codeclimate.com/github/faber-lotto/capistrano-template.png)](https://codeclimate.com/github/faber-lotto/capistrano-template)
 
 # Capistrano::Template 
 
