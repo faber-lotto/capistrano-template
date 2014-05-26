@@ -54,8 +54,8 @@ This settings can be changed in your Capfile, deploy.rb or stage file.
 | Variable              | Default              | Description                                                           |
 |-----------------------|:--------------------:|-----------------------------------------------------------------------|
 |`templating_digster`   | `templating_digster` | Checksum algorythmous for rendered template to check for remote diffs |
-|`templating_digest_cmd`| `%Q{test "Z$(openssl md5 %<path>s| sed "s/^.*= *//")" = "Z%<digest>s" }` | Remote command to validate a digest. Format placeholders path is replaces by full `path` to the remote file and `digest` with the digest calculated in capistrano. |
-|`templating_mode_test_cmd` | `%Q{ [ "Z$(printf "%%.4o" 0$(stat -c "%%a" %<path>s 2>/dev/null ||  stat -f "%%A" %<path>s))" != "Z%<mode>s" ] }` | Test command to check the remote file permissions. |
+|`templating_digest_cmd`| `%Q{test "Z$(openssl md5 %<path>s\| sed "s/^.*= *//")" = "Z%<digest>s" }` | Remote command to validate a digest. Format placeholders path is replaces by full `path` to the remote file and `digest` with the digest calculated in capistrano. |
+|`templating_mode_test_cmd` | `%Q{ [ "Z$(printf "%%.4o" 0$(stat -c "%%a" %<path>s 2>/dev/null \|\|  stat -f "%%A" %<path>s))" != "Z%<mode>s" ] }` | Test command to check the remote file permissions. |
 | `templating_paths`| `["config/deploy/templates/#{fetch(:stage)}/%<host>s","config/deploy/templates/#{fetch(:stage)}", "config/deploy/templates/shared/%<host>s","config/deploy/templates/shared"]`| Folder to look for a template to render. |
 
 
