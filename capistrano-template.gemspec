@@ -12,7 +12,7 @@ Gem::Specification.new do |spec|
   spec.description   = %q(A capistrano 3 plugin that aids in rendering erb templates and
 uploads the content to the server if the file does not exists at
 the remote host or the content did change)
-  spec.homepage      = ''
+  spec.homepage      = 'https://github.com/faber-lotto/capistrano-template'
   spec.license       = 'MIT'
 
   spec.files         = `git ls-files -z`.split("\x0")
