@@ -3,7 +3,7 @@ require 'spec_helper'
 module Capistrano
   module Template
     module Helpers
-      module Unit # prodect from other dummy classes
+      module Unit # protect from other dummy classes
         module DSLSpec
           class Dummy
             include DSL

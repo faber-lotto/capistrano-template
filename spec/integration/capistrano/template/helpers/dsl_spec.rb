@@ -31,7 +31,7 @@ module Capistrano
               data.fetch(*args)
             end
 
-            # sshkit metthods
+            # sshkit methods
 
             def host
               'localhost'
