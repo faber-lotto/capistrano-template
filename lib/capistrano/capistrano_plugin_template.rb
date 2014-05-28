@@ -1,5 +1,6 @@
 require 'capistrano/template'
 
-include Capistrano::Template::Helpers::DSL
+# don't pollute global namespace 
+self.extend Capistrano::Template::Helpers::DSL
 
 import File.join(__dir__, 'template', 'tasks', 'template_defaults.rake')
