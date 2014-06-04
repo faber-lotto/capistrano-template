@@ -47,13 +47,21 @@ module Capistrano
             path = File.dirname(path)
           end
 
-          remote_path = capture("(cd  #{path} && pwd -P) || readlink -sf #{path}").chomp
+          remote_path = capture("/bin/bash -c '(cd  #{path} && pwd -P) || readlink -sf #{path}'").chomp
 
           includes_filename ? File.join(remote_path, filename) : remote_path
         end
 
         def _template_factory
           ->(from, context, digester) {TemplateDigester.new(Renderer.new(from, context), digester) }
+        end
+
+        def method_missing(method_name, *args)
+          if self.class.respond_to? method_name
+            self.class.send(method_name, *args)
+          else
+            super
+          end
         end
       end
     end
