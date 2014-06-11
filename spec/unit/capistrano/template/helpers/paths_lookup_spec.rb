@@ -15,12 +15,12 @@ module Capistrano
         describe '#template_exists?' do
 
           it 'returns true when a template file exists' do
-            subject.stub(existence_check: true)
+            allow(subject).to receive(:existence_check).and_return(true)
             expect(subject.template_exists?(template_name)).to be_truthy
           end
 
           it 'returns false when a template does not file exists' do
-            subject.stub(existence_check: false)
+            allow(subject).to receive(:existence_check).and_return(false)
             expect(subject.template_exists?(template_name)).to be_falsy
           end
 
