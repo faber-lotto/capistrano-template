@@ -20,6 +20,8 @@ the remote host or the content did change)
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ['lib']
 
+  spec.has_rdoc = 'yard'
+
   spec.required_ruby_version = '>= 2.0.0'
   spec.add_dependency 'capistrano', '~> 3.0'
 

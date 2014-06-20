@@ -12,7 +12,7 @@ module Capistrano
         end
 
         def as_str
-          @rendered_template ||= ERB.new(template_content).result(binding)
+          @rendered_template ||= ERB.new(template_content, nil, '-').result(binding)
         end
 
         def as_io
