@@ -74,8 +74,9 @@ module Capistrano
 
         let(:tmp_folder) { File.join(__dir__, '..', '..', '..', 'tmp') }
 
-        let(:template_content) { '<%=var1%> -- <%=var2%>' }
-        let(:expected_content) { 'my -- content' }
+        let(:template_content) { '<%=var1%> -- <%=var2%> -- <%= my_local %>' }
+        let(:expected_content) { 'my -- content -- local content' }
+        let(:locals) { { 'my_local' => 'local content' } }
 
         let(:template_name) { 'my_template.erb' }
         let(:template_fullname) { File.join(tmp_folder, template_name) }
@@ -105,7 +106,7 @@ module Capistrano
         describe '#template' do
 
           it 'create the result file' do
-            subject.template(template_name)
+            subject.template(template_name, locals: locals)
 
             expect(File.read(remote_filename)).to eq(expected_content)
           end
