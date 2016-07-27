@@ -14,9 +14,5 @@ ParameterLists:
 MethodLength:
   Max: 50
 
-# @see http://www.rubytapas.com/episodes/24-Incidental-Change
-TrailingComma:
-  Enabled: false
-
 RegexpLiteral:
   Enabled: false
