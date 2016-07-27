@@ -2,13 +2,13 @@ module Capistrano
   module Template
     module Helpers
       module DSL
-        def template(from, to = nil, mode = 0640)
+        def template(from, to = nil, mode = 0640, locals: {})
           fail ::ArgumentError, "template #{from} not found Paths: #{template_paths_lookup.paths_for_file(from).join(':')}" unless template_exists?(from)
 
           to ||= "#{release_path}/#{File.basename(from, '.erb')}"
           to = remote_path_for(to, true)
 
-          template = _template_factory.call(template_file(from), self, fetch(:templating_digster))
+          template = _template_factory.call(template_file(from), self, fetch(:templating_digster), locals)
 
           _uploader_factory.call(to, self,
                                  digest: template.digest,
@@ -53,7 +53,7 @@ module Capistrano
         end
 
         def _template_factory
-          ->(from, context, digester) {TemplateDigester.new(Renderer.new(from, context), digester) }
+          ->(from, context, digester, locals) {TemplateDigester.new(Renderer.new(from, context, locals: locals), digester) }
         end
 
         def method_missing(method_name, *args)
