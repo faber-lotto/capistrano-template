@@ -58,6 +58,10 @@ module Capistrano
 
             def error(*)
             end
+
+            def dry_run?
+              false
+            end
           end
         end
       end
