@@ -5,12 +5,11 @@ module Capistrano
         def template(from, to = nil, mode = 0640, locals: {})
           fail ::ArgumentError, "template #{from} not found Paths: #{template_paths_lookup.paths_for_file(from).join(':')}" unless template_exists?(from)
 
-          to ||= "#{release_path}/#{File.basename(from, '.erb')}"
-          to = remote_path_for(to, true)
+          return if dry_run?
 
           template = _template_factory.call(template_file(from), self, fetch(:templating_digster), locals)
 
-          _uploader_factory.call(to, self,
+          _uploader_factory.call(get_to(to, from), self,
                                  digest: template.digest,
                                  digest_cmd: fetch(:templating_digest_cmd),
                                  mode_test_cmd: fetch(:templating_mode_test_cmd),
@@ -62,6 +61,19 @@ module Capistrano
           else
             super
           end
+        end
+
+        def dry_run?
+          if ::Capistrano::Configuration.respond_to?(:dry_run?)
+            ::Capistrano::Configuration.dry_run?
+          else
+            ::Capistrano::Configuration.env.send(:config)[:sshkit_backend] == SSHKit::Backend::Printer
+          end
+        end
+
+        def get_to(to, from)
+          to ||= "#{release_path}/#{File.basename(from, '.erb')}"
+          remote_path_for(to, true)
         end
       end
     end
