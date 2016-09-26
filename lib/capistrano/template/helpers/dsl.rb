@@ -52,7 +52,10 @@ module Capistrano
             path = File.dirname(path)
           end
 
-          remote_path = capture("/bin/bash -c '(cd  #{path} && pwd -P) || readlink -sf #{path}'").chomp
+          cd_cmd = "cd #{path}"
+          cd_cmd = "cd #{pwd_path}; cd #{cd_cmd}" if pwd_path
+
+          remote_path = capture("/bin/bash -c '(#{cd_cmd} && pwd -P) || readlink -sf #{path}'").chomp
 
           includes_filename ? File.join(remote_path, filename) : remote_path
         end
