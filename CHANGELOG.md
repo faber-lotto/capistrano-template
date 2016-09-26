@@ -6,7 +6,6 @@
 * [#6](https://github.com/faber-lotto/capistrano-template/6): Add dry run support. [@claudusd](https://github.com/claudusd).
 * [#9](https://github.com/faber-lotto/capistrano-template/9): Add support for setting file owner. [@slowjack2k](https://github.com/slowjack2k).
 
-
 0.0.5 (27/07/2016)
 ==================
 
