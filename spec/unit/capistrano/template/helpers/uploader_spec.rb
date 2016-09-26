@@ -89,7 +89,9 @@ module Capistrano
         describe '#set_user' do
           it 'sets the user for the remote file' do
             allow(subject).to receive(:user_changed?).and_return true
+
             expect(upload_handler).to receive(:execute).with('sudo', 'chown', 'deploy', remote_filename_expented)
+
             subject.set_user
           end
 
@@ -103,7 +105,9 @@ module Capistrano
         describe '#set_group' do
           it 'sets the group for the remote file' do
             allow(subject).to receive(:group_changed?).and_return true
+
             expect(upload_handler).to receive(:execute).with('sudo', 'chgrp', 'www-run', remote_filename_expented)
+
             subject.set_group
           end
 

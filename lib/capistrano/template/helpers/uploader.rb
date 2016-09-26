@@ -81,6 +81,7 @@ module Capistrano
         def set_user
           if user_changed?
             remote_handler.info "user changed for file #{full_to_path} on #{host} set new user"
+
             remote_handler.execute 'sudo', 'chown', user, full_to_path
           else
             remote_handler.info "user not changed for file #{full_to_path} on #{host}"
@@ -90,6 +91,7 @@ module Capistrano
         def set_group
           if group_changed?
             remote_handler.info "group changed for file #{full_to_path} on #{host} set new group"
+
             remote_handler.execute 'sudo', 'chgrp', group, full_to_path
           else
             remote_handler.info "group not changed for file #{full_to_path} on #{host}"

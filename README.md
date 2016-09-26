@@ -52,6 +52,7 @@ In your Capfile:
        # after this the mode is changed to 0750
        # owner is changed to "deployer:www-run"
        # keep in mind chown and chgrp needs sudo privileges
+
        template 'other.template.name', '~/execute_some_thing.sh', 0750, 'deployer', 'www-run' ,locals: { 'local1' => 'value local 1'}
      end
           
