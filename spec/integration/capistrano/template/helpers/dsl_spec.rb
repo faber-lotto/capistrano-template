@@ -61,6 +61,9 @@ module Capistrano
             def error(*)
             end
 
+            def pwd_path
+            end
+
             def dry_run?
               false
             end

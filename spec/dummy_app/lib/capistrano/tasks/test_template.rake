@@ -16,6 +16,9 @@ task :setup do
 
     within '/var/www' do
 
+      puts "PATH: #{pwd_path}"
+
+
       template 'other.template.name',
                './execute_some_thing.sh',
                0o750,

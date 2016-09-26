@@ -24,6 +24,10 @@ module Capistrano
               '/var/www/app/releases/20140510'
             end
 
+            def pwd_path
+              nil
+            end
+
             def fetch(*args)
               data.fetch(*args)
             end

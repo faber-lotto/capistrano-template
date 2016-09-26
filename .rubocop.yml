@@ -18,5 +18,8 @@ RegexpLiteral:
   Enabled: false
 
 AllCops:
-  Excludes:
-    - spec/dummy_app/**/*
+  Exclude:
+    - 'spec/dummy_app/**/*'
+    - 'vendor/**/*'
+    - 'tmp/**/*'
+  TargetRubyVersion: 2.0
