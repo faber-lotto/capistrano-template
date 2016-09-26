@@ -11,6 +11,8 @@ module Capistrano
               upload_handler,
               mode: 0640,
               mode_test_cmd: mode_test_cmd,
+              owner: 'deploy',
+              owner_test_cmd: owner_test_cmd,
               digest: digest,
               digest_cmd: digest_cmd,
               io: as_io
@@ -34,6 +36,7 @@ module Capistrano
         let(:digest) { Digest::MD5.hexdigest(rendered_template_content) }
         let(:digest_cmd) { %Q(echo "%<digest>s %<path>s" | md5sum -c --status) }
         let(:mode_test_cmd) { %Q{ [ "Z$(printf "%%.4o" 0$(stat -c "%%a" %<path>s 2>/dev/null ||  stat -f "%%A" %<path>s))" != "Z%<mode>s" ] } }
+        let(:owner_test_cmd) { %Q{ [ "Z$(stat -c "%%U" %<path>s 2>/dev/null)" != "Z%<owner>s" ] } }
 
         describe '#upload_as_file' do
 
@@ -67,6 +70,20 @@ module Capistrano
           end
         end
 
+        describe '#set_owner' do
+          it 'sets the owner for the remote file' do
+            allow(subject).to receive(:owner_changed?).and_return true
+            expect(upload_handler).to receive(:execute).with('chown', 'deploy', remote_filename_expented)
+            subject.set_owner
+          end
+
+          it 'sets not the owner for the remote file' do
+            allow(subject).to receive(:owner_changed?).and_return false
+            expect(upload_handler).not_to receive(:execute)
+            subject.set_owner
+          end
+        end
+
         describe '#file_changed?' do
           it 'uses the "digest_cmd" to check file changes' do
             expect(subject).to receive(:__check__).with(%Q(echo "#{digest} /var/www/shared/config/database.yml" | md5sum -c --status))
@@ -82,18 +99,34 @@ module Capistrano
           end
 
           it 'replaces "<path>"' do
+            allow(subject).to receive(:__check__)
             subject.digest_cmd = '%<path>s'
-            expect(subject).to receive(:__check__).with(remote_filename_expented)
 
             subject.file_changed?
+
+            expect(subject).to have_received(:__check__).with(remote_filename_expented)
           end
         end
 
         describe '#permission_changed?' do
           it 'checks the actual file permissions' do
-            expect(subject).to receive(:__check__).with(mode_test_cmd % { mode: '0640', path: remote_filename_expented })
-
+            allow(subject).to receive(:__check__)
             subject.permission_changed?
+
+            expect(subject).to have_received(:__check__).with(mode_test_cmd % { mode: '0640', path: remote_filename_expented })
+          end
+        end
+
+        describe '#owner_changed?' do
+          it 'returns "false" when no user is given' do
+            subject.owner = nil
+            expect(subject.owner_changed?).to be_falsy
+          end
+
+          it 'checks the actual owner' do
+            allow(subject).to receive(:__check__)
+            subject.owner_changed?
+            expect(subject).to have_received(:__check__).with(owner_test_cmd % { owner: 'deploy', path: remote_filename_expented })
           end
         end
 

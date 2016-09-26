@@ -10,12 +10,16 @@ module Capistrano
                       :full_to_path,
                       :digest_cmd,
                       :mode,
+                      :owner,
+                      :owner_test_cmd,
                       :remote_handler,
                       :mode_test_cmd
 
         def initialize(full_to_path, remote_handler,
             mode: 0640,
             mode_test_cmd: nil,
+            owner: nil,
+            owner_test_cmd: nil,
             digest: nil,
             digest_cmd: nil,
             io: nil
@@ -27,6 +31,8 @@ module Capistrano
           self.digest_cmd = digest_cmd
           self.mode = mode
           self.mode_test_cmd = mode_test_cmd
+          self.owner = owner
+          self.owner_test_cmd = owner_test_cmd
 
           self.io = io
           self.digest = digest
@@ -59,12 +65,25 @@ module Capistrano
           end
         end
 
+        def set_owner
+          if owner_changed?
+            remote_handler.info "owner changed for file #{full_to_path} on #{host} set new owner"
+            remote_handler.execute 'chown', owner, full_to_path
+          else
+            remote_handler.info "owner not changed for file #{full_to_path} on #{host}"
+          end
+        end
+
         def file_changed?
           !__check__(digest_cmd)
         end
 
         def permission_changed?
           __check__(mode_test_cmd)
+        end
+
+        def owner_changed?
+          owner && __check__(owner_test_cmd)
         end
 
         protected
@@ -86,6 +105,13 @@ module Capistrano
           @mode_test_cmd % {
             path: full_to_path,
             mode: octal_mode_str
+          }
+        end
+
+        def owner_test_cmd
+          @owner_test_cmd % {
+            path: full_to_path,
+            owner: owner
           }
         end
       end

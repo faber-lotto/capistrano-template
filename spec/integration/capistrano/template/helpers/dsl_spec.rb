@@ -13,7 +13,8 @@ module Capistrano
               self.data = {
                 templating_digster: ->(data) { Digest::MD5.hexdigest(data) },
                 templating_digest_cmd: %Q(echo "%<digest>s %<path>s" | md5sum -c --status ),
-                templating_mode_test_cmd: %Q{ [ "Z$(printf "%%.4o" 0$(stat -c "%%a" %<path>s 2>/dev/null ||  stat -f "%%A" %<path>s))" != "Z%<mode>s" ] }
+                templating_mode_test_cmd: %Q{ [ "Z$(printf "%%.4o" 0$(stat -c "%%a" %<path>s 2>/dev/null ||  stat -f "%%A" %<path>s))" != "Z%<mode>s" ] },
+                templating_owner_test_cmd: %Q{ [ "Z$(stat -c "%%U" %<path>s 2>/dev/null)" != "Z%<owner>s" ] }
               }
             end
 
