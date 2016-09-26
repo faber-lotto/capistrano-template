@@ -44,8 +44,22 @@ module Capistrano
 
           it 'uploads changed files' do
             allow(subject).to receive(:file_changed?).and_return true
-            expect(upload_handler).to receive(:upload!).with(as_io, remote_filename_expented)
+            allow(upload_handler).to receive(:execute).and_return true
+            allow(upload_handler).to receive(:upload!).and_return true
+            
             subject.upload_as_file
+
+            expect(upload_handler).to have_received(:upload!).with(as_io, remote_filename_expented)
+          end
+
+          it 'deletes a file before upload' do
+            allow(subject).to receive(:file_changed?).and_return true
+            allow(upload_handler).to receive(:execute).and_return true
+            allow(upload_handler).to receive(:upload!).and_return true
+
+            subject.upload_as_file
+
+            expect(upload_handler).to have_received(:execute).with('rm', '-f', remote_filename_expented)
           end
 
           it 'does not upload unchanged files' do
