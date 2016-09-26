@@ -18,5 +18,6 @@ RegexpLiteral:
   Enabled: false
 
 AllCops:
-  Excludes:
+  Exclude:
     - spec/dummy_app/**/*
+    - vendor/**/*
