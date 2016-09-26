@@ -38,19 +38,21 @@ In your Capfile:
  
    desc 'Upload a rendered erb-template'
    task :setup do     
-     on roles :all
+     on roles :all do
        # searchs for template assets.host.site.erb in :templating_paths
        # renders the template and upload it to "#{release_path}/assets.host.site" on all hosts
        # when the new rendered content is changed or the remote file does not exists
        template 'assets.host.site', locals: { 'local1' => 'value local 1'}
      end
      
-     on roles :all       
+     on roles :all do      
        # searchs for template other.template.name.erb in :templating_paths
        # renders the template and upload it to "~/execute_some_thing.sh" on all hosts
        # when the new rendered content is changed or the remote file does not exists
        # after this the mode is changed to 0750
-       template 'other.template.name', '~/execute_some_thing.sh', 0750, locals: { 'local1' => 'value local 1'}
+       # owner is changed to "deployer:www-run"
+       # keep in mind chown and chgrp needs sudo privileges
+       template 'other.template.name', '~/execute_some_thing.sh', 0750, 'deployer', 'www-run' ,locals: { 'local1' => 'value local 1'}
      end
           
    end
@@ -119,6 +121,7 @@ This settings can be changed in your Capfile, deploy.rb or stage file.
 |`templating_digster`   | <code> -&gt;(data){ OpenSSL::Digest::MD5.hexdigest(data)} </code> | Checksum algorythmous for rendered template to check for remote diffs |
 |`templating_digest_cmd`| <code>%Q{test "Z$(openssl md5 %&lt;path&gt;s &#124; sed 's/^.*= *//')" = "Z%&lt;digest&gt;s" }</code> | Remote command to validate a digest. Format placeholders path is replaces by full `path` to the remote file and `digest` with the digest calculated in capistrano. |
 |`templating_mode_test_cmd` | <code>%Q{ &#91; "Z$(printf "%%.4o" 0$(stat -c "%%a" %&lt;path&gt;s 2&gt;/dev/null &#124;&#124;  stat -f "%%A" %&lt;path&gt;s))" != "Z%&lt;mode&gt;s" &#93; }</code> | Test command to check the remote file permissions. |
+|`templating_user_test_cmd` | <code>%Q{ &#91; "Z$(stat -c "%%U" %&lt;path&gt;s 2&gt;/dev/null)" != "Z%&lt;user&gt;s" &#93; }</code> | Test command to check the remote file permissions. |
 | `templating_paths` | <code>&#91;"config/deploy/templates/#{fetch(:stage)}/%&lt;host&gt;s",</code> <br> <code> "config/deploy/templates/#{fetch(:stage)}",</code> <br> <code> "config/deploy/templates/shared/%&lt;host&gt;s",</code> <br> <code> "config/deploy/templates/shared"&#93;</code>| Folder to look for a template to render. `<host>` is replaced by the actual host. |
 
 

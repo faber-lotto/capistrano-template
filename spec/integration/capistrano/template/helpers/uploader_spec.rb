@@ -91,7 +91,6 @@ module Capistrano
 
             expect(mode).to eq(0640)
           end
-
         end
 
       end

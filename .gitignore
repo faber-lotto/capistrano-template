@@ -13,6 +13,8 @@ lib/bundler/man
 pkg
 rdoc
 spec/reports
+spec/dummy_app/.vagrant
+spec/dummy_app/log
 test/tmp
 test/version_tmp
 tmp
