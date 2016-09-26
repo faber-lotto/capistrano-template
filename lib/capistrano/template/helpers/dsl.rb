@@ -53,7 +53,7 @@ module Capistrano
           end
 
           cd_cmd = "cd #{path}"
-          cd_cmd = "cd #{pwd_path}; cd #{cd_cmd}" if pwd_path
+          cd_cmd = "cd #{pwd_path}; #{cd_cmd}" if pwd_path
 
           remote_path = capture("/bin/bash -c '(#{cd_cmd} && pwd -P) || readlink -sf #{path}'").chomp
 
