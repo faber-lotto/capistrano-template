@@ -19,4 +19,4 @@ RegexpLiteral:
 
 AllCops:
   Excludes:
-    - spec/dummy_app/**
+    - spec/dummy_app/**/*

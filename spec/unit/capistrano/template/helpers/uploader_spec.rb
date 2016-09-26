@@ -46,7 +46,7 @@ module Capistrano
             allow(subject).to receive(:file_changed?).and_return true
             allow(upload_handler).to receive(:execute).and_return true
             allow(upload_handler).to receive(:upload!).and_return true
-            
+
             subject.upload_as_file
 
             expect(upload_handler).to have_received(:upload!).with(as_io, remote_filename_expented)
