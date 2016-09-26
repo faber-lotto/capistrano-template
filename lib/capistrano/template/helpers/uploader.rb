@@ -4,22 +4,27 @@ module Capistrano
       require 'capistrano/template/helpers/renderer'
       require 'capistrano/template/helpers/template_digester'
 
+      # rubocop: disable Metrics/ClassLength
       class Uploader
         attr_accessor :io,
                       :digest,
                       :full_to_path,
                       :digest_cmd,
                       :mode,
-                      :owner,
-                      :owner_test_cmd,
+                      :user,
+                      :group,
+                      :user_test_cmd,
+                      :group_test_cmd,
                       :remote_handler,
                       :mode_test_cmd
 
         def initialize(full_to_path, remote_handler,
             mode: 0640,
             mode_test_cmd: nil,
-            owner: nil,
-            owner_test_cmd: nil,
+            user: nil,
+            user_test_cmd: nil,
+            group: nil,
+            group_test_cmd: nil,
             digest: nil,
             digest_cmd: nil,
             io: nil
@@ -31,8 +36,10 @@ module Capistrano
           self.digest_cmd = digest_cmd
           self.mode = mode
           self.mode_test_cmd = mode_test_cmd
-          self.owner = owner
-          self.owner_test_cmd = owner_test_cmd
+          self.user = user
+          self.user_test_cmd = user_test_cmd
+          self.group = group
+          self.group_test_cmd = group_test_cmd
 
           self.io = io
           self.digest = digest
@@ -41,6 +48,7 @@ module Capistrano
         def call
           upload_as_file
           set_mode
+          set_user
         end
 
         def upload_as_file
@@ -65,12 +73,21 @@ module Capistrano
           end
         end
 
-        def set_owner
-          if owner_changed?
-            remote_handler.info "owner changed for file #{full_to_path} on #{host} set new owner"
-            remote_handler.execute 'chown', owner, full_to_path
+        def set_user
+          if user_changed?
+            remote_handler.info "user changed for file #{full_to_path} on #{host} set new user"
+            remote_handler.execute 'chown', user, full_to_path
           else
-            remote_handler.info "owner not changed for file #{full_to_path} on #{host}"
+            remote_handler.info "user not changed for file #{full_to_path} on #{host}"
+          end
+        end
+
+        def set_group
+          if group_changed?
+            remote_handler.info "group changed for file #{full_to_path} on #{host} set new group"
+            remote_handler.execute 'chgrp', group, full_to_path
+          else
+            remote_handler.info "group not changed for file #{full_to_path} on #{host}"
           end
         end
 
@@ -82,8 +99,12 @@ module Capistrano
           __check__(mode_test_cmd)
         end
 
-        def owner_changed?
-          owner && __check__(owner_test_cmd)
+        def user_changed?
+          user && __check__(user_test_cmd)
+        end
+
+        def group_changed?
+          group && __check__(group_test_cmd)
         end
 
         protected
@@ -108,13 +129,21 @@ module Capistrano
           }
         end
 
-        def owner_test_cmd
-          @owner_test_cmd % {
+        def user_test_cmd
+          @user_test_cmd % {
             path: full_to_path,
-            owner: owner
+            user: user
+          }
+        end
+
+        def group_test_cmd
+          @group_test_cmd % {
+            path: full_to_path,
+            user: group
           }
         end
       end
+      # rubocop: enable Metrics/ModuleLength
     end
   end
 end

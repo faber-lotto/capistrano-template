@@ -2,6 +2,7 @@ require 'spec_helper'
 
 module Capistrano
   module Template
+    # rubocop: disable Metrics/ModuleLength
     module Helpers
       describe Uploader do
 
@@ -11,8 +12,9 @@ module Capistrano
               upload_handler,
               mode: 0640,
               mode_test_cmd: mode_test_cmd,
-              owner: 'deploy',
-              owner_test_cmd: owner_test_cmd,
+              user: 'deploy',
+              group: 'www-run',
+              user_test_cmd: user_test_cmd,
               digest: digest,
               digest_cmd: digest_cmd,
               io: as_io
@@ -36,7 +38,7 @@ module Capistrano
         let(:digest) { Digest::MD5.hexdigest(rendered_template_content) }
         let(:digest_cmd) { %Q(echo "%<digest>s %<path>s" | md5sum -c --status) }
         let(:mode_test_cmd) { %Q{ [ "Z$(printf "%%.4o" 0$(stat -c "%%a" %<path>s 2>/dev/null ||  stat -f "%%A" %<path>s))" != "Z%<mode>s" ] } }
-        let(:owner_test_cmd) { %Q{ [ "Z$(stat -c "%%U" %<path>s 2>/dev/null)" != "Z%<owner>s" ] } }
+        let(:user_test_cmd) { %Q{ [ "Z$(stat -c "%%U" %<path>s 2>/dev/null)" != "Z%<user>s" ] } }
 
         describe '#upload_as_file' do
 
@@ -70,17 +72,31 @@ module Capistrano
           end
         end
 
-        describe '#set_owner' do
-          it 'sets the owner for the remote file' do
-            allow(subject).to receive(:owner_changed?).and_return true
+        describe '#set_user' do
+          it 'sets the user for the remote file' do
+            allow(subject).to receive(:user_changed?).and_return true
             expect(upload_handler).to receive(:execute).with('chown', 'deploy', remote_filename_expented)
-            subject.set_owner
+            subject.set_user
           end
 
-          it 'sets not the owner for the remote file' do
-            allow(subject).to receive(:owner_changed?).and_return false
+          it 'sets not the user for the remote file' do
+            allow(subject).to receive(:user_changed?).and_return false
             expect(upload_handler).not_to receive(:execute)
-            subject.set_owner
+            subject.set_user
+          end
+        end
+
+        describe '#set_group' do
+          it 'sets the group for the remote file' do
+            allow(subject).to receive(:group_changed?).and_return true
+            expect(upload_handler).to receive(:execute).with('chgrp', 'www-run', remote_filename_expented)
+            subject.set_group
+          end
+
+          it 'sets not the group for the remote file' do
+            allow(subject).to receive(:group_changed?).and_return false
+            expect(upload_handler).not_to receive(:execute)
+            subject.set_group
           end
         end
 
@@ -117,20 +133,21 @@ module Capistrano
           end
         end
 
-        describe '#owner_changed?' do
+        describe '#user_changed?' do
           it 'returns "false" when no user is given' do
-            subject.owner = nil
-            expect(subject.owner_changed?).to be_falsy
+            subject.user = nil
+            expect(subject.user_changed?).to be_falsy
           end
 
-          it 'checks the actual owner' do
+          it 'checks the actual user' do
             allow(subject).to receive(:__check__)
-            subject.owner_changed?
-            expect(subject).to have_received(:__check__).with(owner_test_cmd % { owner: 'deploy', path: remote_filename_expented })
+            subject.user_changed?
+            expect(subject).to have_received(:__check__).with(user_test_cmd % { user: 'deploy', path: remote_filename_expented })
           end
         end
 
       end
+      # rubocop: enable Metrics/ModuleLength
     end
   end
 end

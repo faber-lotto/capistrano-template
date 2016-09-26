@@ -3,7 +3,7 @@ module Capistrano
     module Helpers
       module DSL
         # rubocop: disable Metrics/AbcSize
-        def template(from, to = nil, mode = 0640, owner = nil, locals: {})
+        def template(from, to = nil, mode = 0640, user = nil, group = nil, locals: {})
           fail ::ArgumentError, "template #{from} not found Paths: #{template_paths_lookup.paths_for_file(from).join(':')}" unless template_exists?(from)
 
           to ||= "#{release_path}/#{File.basename(from, '.erb')}"
@@ -15,9 +15,11 @@ module Capistrano
                                  digest: template.digest,
                                  digest_cmd: fetch(:templating_digest_cmd),
                                  mode_test_cmd: fetch(:templating_mode_test_cmd),
-                                 owner_test_cmd: fetch(:templating_owner_test_cmd),
+                                 user_test_cmd: fetch(:templating_user_test_cmd),
+                                 group_test_cmd: fetch(:templating_group_test_cmd),
                                  mode: mode,
-                                 owner: owner,
+                                 user: user,
+                                 group: group,
                                  io: template.as_io
                                 ).call
         end
