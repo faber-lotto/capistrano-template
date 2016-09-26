@@ -16,3 +16,7 @@ MethodLength:
 
 RegexpLiteral:
   Enabled: false
+
+AllCops:
+  Excludes:
+    - spec/dummy_app/**/*

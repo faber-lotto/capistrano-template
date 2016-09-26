@@ -1,0 +1,26 @@
+VAGRANTFILE_API_VERSION = '2'.freeze
+
+$provision_script = <<SCRIPT
+echo I am provisioning...
+useradd deploy -s /bin/bash -m
+chpasswd << 'END'
+deploy:12345678
+END
+apt-get update -y
+apt-get install -y git-core
+mkdir -p /var/www
+chown -R vagrant /var/www
+date > /etc/vagrant_provisioned_at
+SCRIPT
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+  config.vm.box = 'ubuntu/precise64'
+  config.vm.box_url = 'https://files.vagrantup.com/precise64.box'
+
+  config.vm.define 'cap-template-1' do |web|
+    web.vm.network 'forwarded_port', guest: 22, host: 3001
+
+    config.vm.provision 'shell',
+                        inline: $provision_script
+  end
+end
