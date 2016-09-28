@@ -1,15 +1,19 @@
-0.0.7 (Next)
-=============
+0.0.8 (next)
+==================
 
-
-0.0.6 (28/09/2016)
-=============
+0.0.7 (28/09/2016)
+==================
 
 #### Features
 
 * [#6](https://github.com/faber-lotto/capistrano-template/6): Add dry run support. [@claudusd](https://github.com/claudusd).
 * [#9](https://github.com/faber-lotto/capistrano-template/9): Add support for setting file owner. [@slowjack2k](https://github.com/slowjack2k).
 * [#10](https://github.com/faber-lotto/capistrano-template/10): Add support for within block. [@slowjack2k](https://github.com/slowjack2k).
+
+0.0.6 (28/09/2016)
+==================
+
+skipped
 
 0.0.5 (27/07/2016)
 ==================
