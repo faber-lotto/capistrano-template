@@ -125,29 +125,26 @@ module Capistrano
         end
 
         def digest_cmd
-          @digest_cmd % { digest: digest,
-                          path: full_to_path }
+          format @digest_cmd , digest: digest,
+                               path: full_to_path
         end
 
         def mode_test_cmd
-          @mode_test_cmd % {
+          format @mode_test_cmd,
             path: full_to_path,
             mode: octal_mode_str
-          }
         end
 
         def user_test_cmd
-          @user_test_cmd % {
+          format @user_test_cmd ,
             path: full_to_path,
             user: user
-          }
         end
 
         def group_test_cmd
-          @group_test_cmd % {
+          format @group_test_cmd,
             path: full_to_path,
             group: group
-          }
         end
       end
       # rubocop: enable Metrics/ModuleLength

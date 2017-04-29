@@ -36,13 +36,13 @@ module Capistrano
 
         def render(from, indent: 0, locals: {})
           template = template_file(from)
-          content  = Renderer.new(template, self, reader: self.reader, locals: self.locals.merge(locals)).as_str
+          content  = Renderer.new(template, self, reader: reader, locals: self.locals.merge(locals)).as_str
 
           indented_content(content, indent)
         end
 
         def indented_content(content, indent)
-          content.split("\n").map { |line| "#{' ' * indent}#{line}"}.join("\n")
+          content.split("\n").map { |line| "#{' ' * indent}#{line}" }.join("\n")
         end
 
         def respond_to_missing?(m, include_private)

@@ -2,7 +2,7 @@ require 'spec_helper'
 
 module Capistrano
   module Template
-    # rubocop: disable Metrics/ModuleLength
+    # rubocop: disable Metrics/ModuleLength, Metrics/BlockLength
     module Helpers
       describe Uploader do
 
@@ -147,7 +147,7 @@ module Capistrano
             allow(subject).to receive(:__check__)
             subject.permission_changed?
 
-            expect(subject).to have_received(:__check__).with(mode_test_cmd % { mode: '0640', path: remote_filename_expented })
+            expect(subject).to have_received(:__check__).with(format(mode_test_cmd, mode: '0640', path: remote_filename_expented))
           end
         end
 
@@ -160,12 +160,12 @@ module Capistrano
           it 'checks the actual user' do
             allow(subject).to receive(:__check__)
             subject.user_changed?
-            expect(subject).to have_received(:__check__).with(user_test_cmd % { user: 'deploy', path: remote_filename_expented })
+            expect(subject).to have_received(:__check__).with(format(user_test_cmd, user: 'deploy', path: remote_filename_expented))
           end
         end
 
       end
-      # rubocop: enable Metrics/ModuleLength
+      # rubocop: enable Metrics/ModuleLength, Metrics/BlockLength
     end
   end
 end
