@@ -23,7 +23,7 @@ module Capistrano
 
         def paths_for_file(filename)
           paths.map do |path|
-            path = path % { host: host }
+            path = format(path, host: host)
             ["#{path}/#{filename}.erb", "#{path}/#{filename}"]
           end.flatten
         end

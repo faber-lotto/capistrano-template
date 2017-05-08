@@ -78,6 +78,8 @@ In your Capfile:
    server_name <%= host.properties.fetch(:host_server_name) %>;
    root <%= remote_path_for(current_path) %>/public;
  
+   <%= render 'partial.conf', indent: 2, locals: { 'other_local' => 'other local value' } %>
+
    location ^~ /assets/ {
      gzip_static on;
      expires max;

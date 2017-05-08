@@ -55,14 +55,11 @@ module Capistrano
               `#{cmd}`
             end
 
-            def info(*)
-            end
+            def info(*); end
 
-            def error(*)
-            end
+            def error(*); end
 
-            def pwd_path
-            end
+            def pwd_path; end
 
             def dry_run?
               false
@@ -71,6 +68,7 @@ module Capistrano
         end
       end
 
+      # rubocop:disable Metrics/BlockLength
       describe DSL do
         subject do
           Integration::DSLSpec::Dummy.new.tap do |d|
@@ -122,6 +120,7 @@ module Capistrano
 
         end
       end
+      # rubocop:enable Metrics/BlockLength
     end
   end
 end

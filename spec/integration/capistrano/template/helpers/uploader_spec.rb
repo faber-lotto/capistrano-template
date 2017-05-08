@@ -2,6 +2,7 @@ require 'spec_helper'
 
 module Capistrano
   module Template
+    # rubocop: disable Metrics/BlockLength
     module Helpers
       describe Uploader do
 
@@ -95,5 +96,6 @@ module Capistrano
 
       end
     end
+    # rubocop: enable Metrics/BlockLength
   end
 end
