@@ -1,4 +1,5 @@
 # coding: utf-8
+
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'capistrano/template/version'
@@ -28,7 +29,7 @@ the remote host or the content did change)
   spec.add_development_dependency 'bundler', '~> 1.5'
   spec.add_development_dependency 'rake'
 
-  spec.add_development_dependency 'rspec', '3.0.0'
+  spec.add_development_dependency 'rspec', '3.5.0'
   # show nicely how many specs have to be run
   spec.add_development_dependency 'fuubar'
   # extended console

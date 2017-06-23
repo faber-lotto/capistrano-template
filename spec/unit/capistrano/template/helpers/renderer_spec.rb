@@ -3,22 +3,35 @@ require 'spec_helper'
 module Capistrano
   module Template
     module Helpers
+      # rubocop: disable Metrics/BlockLength, Metrics/LineLength
       describe Renderer do
 
         subject do
           Renderer.new(template_name, context, reader: reader, locals: locals)
         end
 
-        let(:context) { OpenStruct.new(var1: 'my', var2: 'content') }
+        let(:context) do
+          cnt = OpenStruct.new(var1: 'my', var2: 'content')
+          cnt.extend(Capistrano::Template::Helpers::DSL)
+          def cnt.template_file(_)
+            'partial.conf'
+          end
+          cnt
+        end
         let(:locals) { { 'my_local' => 'local content' } }
         let(:template_name) { 'my_template' }
-        let(:reader) { double(read: template_content) }
-        let(:template_content) { '<%=var1%> -- <%=var2%> -- <%= my_local %>' }
+        let(:reader) do
+          reader = double
+          allow(reader).to receive(:read).and_return(main_template_content, partial_template_content)
+          reader
+        end
+        let(:main_template_content) { "<%=var1%> -- <%=var2%>\n<%= render 'partial.conf', indent: 2, locals: { 'my_local' => 'partial local content' } %>\n -- <%= my_local %>" }
+        let(:partial_template_content) { "--partial: <%=var1%>\n--partial: <%=var2%>\n--partial: <%= my_local %>" }
 
         describe '#as_str' do
 
           it 'renders a erb template' do
-            expect(subject.as_str).to eq('my -- content -- local content')
+            expect(subject.as_str).to eq("my -- content\n  --partial: my\n  --partial: content\n  --partial: partial local content\n -- local content")
           end
 
         end
@@ -50,5 +63,6 @@ module Capistrano
 
       end
     end
+    # rubocop: enable Metrics/BlockLength, Metrics/LineLength
   end
 end

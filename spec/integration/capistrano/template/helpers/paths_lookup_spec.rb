@@ -3,6 +3,7 @@ require 'spec_helper'
 module Capistrano
   module Template
     module Helpers
+      # rubocop: disable Metrics/BlockLength
       describe PathsLookup do
         subject do
           PathsLookup.new(lookup_paths, context)
@@ -41,6 +42,7 @@ module Capistrano
         end
 
       end
+      # rubocop: enable Metrics/BlockLength
     end
   end
 end
