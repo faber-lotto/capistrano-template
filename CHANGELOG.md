@@ -1,5 +1,13 @@
-0.0.8 (next)
+0.0.9 (next)
 ==================
+
+0.0.8 (23/06/2017)
+==================
+
+#### Fixes
+
+* [#14](https://github.com/faber-lotto/capistrano-template/14): Fixes an issue with printer backend. [@slowjack2k](https://github.com/slowjack2k).
+
 
 0.0.7 (28/09/2016)
 ==================
