@@ -6,4 +6,10 @@ extend Capistrano::Template::Helpers::DSL
 
 SSHKit::Backend::Netssh.send(:include, Capistrano::Template::Helpers::DSL)
 
+begin
+  require 'sshkit/backend/printer' 
+  SSHKit::Backend::Printer.send(:include, Capistrano::Template::Helpers::DSL)
+rescue LoadError
+end
+
 import File.join(__dir__, 'template', 'tasks', 'template_defaults.rake')
