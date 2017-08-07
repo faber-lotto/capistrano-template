@@ -49,6 +49,7 @@ module Capistrano
         end
       end
 
+      # rubocop: disable Metrics/BlockLength
       describe DSL do
         subject do
           Unit::DSLSpec::Dummy.new
@@ -66,13 +67,13 @@ module Capistrano
         describe '#template_p' do
           it 'makes underlying call to template' do
             p = {
-              :from => 'blah',
-              :to   => 'to',
-              :mode => '0744',
-              :user => 'bob',
-              :grp  => 'users',
-              :locals => {
-                :testkey => 'testval'
+              from:   'blah',
+              to:     'to',
+              mode:   '0744',
+              user:   'bob',
+              group:  'users',
+              locals: {
+                testkey: 'testval'
               }
             }
             expect(subject).to receive(:template).with(template_name, p[:to], p[:mode], p[:user], p[:group], locals: p[:locals])
@@ -82,10 +83,10 @@ module Capistrano
           it 'has default values' do
             expect(subject).to receive(:template).with(template_name, nil, Capistrano::Template::Helpers::DSL::MODE_DEFAULT, nil, nil, locals: {})
             subject.template_p(template_name)
-          end 
+          end
         end
       end
-
+      # rubocop: enable Metrics/BlockLength
     end
   end
 end

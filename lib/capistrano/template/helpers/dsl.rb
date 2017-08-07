@@ -25,7 +25,7 @@ module Capistrano
                                 ).call
         end
         # rubocop: enable Metrics/AbcSize
- 
+
         def template_p(from, params = {})
           to     = params[:to]
           mode   = params[:mode] || MODE_DEFAULT
@@ -33,7 +33,7 @@ module Capistrano
           group  = params[:group]
           locals = params[:locals] || {}
 
-          return template(from, to, mode, user, group, locals: locals)
+          template(from, to, mode, user, group, locals: locals)
         end
 
         def template_exists?(template)
