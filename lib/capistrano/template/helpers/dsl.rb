@@ -2,15 +2,20 @@ module Capistrano
   module Template
     module Helpers
       module DSL
-        MODE_DEFAULT = 0640
+        MODE_DEFAULT = 0o0640
+        MODE_MASK    = 0o1777
 
         # rubocop: disable Metrics/AbcSize
-        def template(from, to = nil, mode = MODE_DEFAULT, user = nil, group = nil, locals: {})
+        def template(from, to = nil, mode = MODE_DEFAULT, user = nil, group = nil, match_local_mode = false, locals: {})
           fail ::ArgumentError, "template #{from} not found Paths: #{template_paths_lookup.paths_for_file(from).join(':')}" unless template_exists?(from)
 
           return if dry_run?
 
+          mode ||= MODE_DEFAULT
+
           template = _template_factory.call(template_file(from), self, fetch(:templating_digster), locals)
+
+          mode = (get_local_mode(from) & MODE_MASK) if match_local_mode == true
 
           _uploader_factory.call(get_to(to, from), self,
                                  digest: template.digest,
@@ -29,11 +34,12 @@ module Capistrano
         def template_p(from, params = {})
           to     = params[:to]
           mode   = params[:mode] || MODE_DEFAULT
+          match_local_mode = params[:match_local_mode] || false
           user   = params[:user]
           group  = params[:group]
           locals = params[:locals] || {}
 
-          template(from, to, mode, user, group, locals: locals)
+          template(from, to, mode, user, group, match_local_mode, locals: locals)
         end
 
         def template_exists?(template)
@@ -95,6 +101,10 @@ module Capistrano
         def get_to(to, from)
           to ||= "#{release_path}/#{File.basename(from, '.erb')}"
           remote_path_for(to, true)
+        end
+
+        def get_local_mode(from)
+          File.stat(template_file(from)).mode
         end
       end
     end
